@@ -42,16 +42,23 @@ io.on('connection', function(socket){
 	console.log("User connected");
 
 	socket.on('login', function(username){
+		console.log("Received login request from: " + username);
 		if(username === ""){
 			this.emit("login_failed", "Username empty");
+			console.log("Sent response: Username empty!");
+			return;
 		}
 
 		if(!usernameTakenCheck(username)){
 			this._userdata.loggedIn = true;
 			this._userdata.username = username;
 			this.emit("login_succes");
+			console.log("Sent response: Login succes!");
+			return;
 		}else{
 			this.emit("login_failed", "Username already taken");
+			console.log("Sent response: Username taken!");
+			return;
 		}
 	});
 
@@ -60,7 +67,9 @@ io.on('connection', function(socket){
 
 		var messageObj = makeMessage(this._userdata.username, msg);
 
+		console.log("Received chatmessage from someone!");
 		io.emit('chat message', messageObj);
+		console.log("Send message to all listeners!");
 	});	
 });
 
